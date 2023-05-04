@@ -4,23 +4,45 @@ import { TextInput, FlatList, StyleSheet, Text, View } from 'react-native';
 
 
 export default function App() {
-  let listaInicial = ['Caderno','Lapis','caneta azul']
+  let listaInicial = ['lapis','caneta','caderno']
   let [listaMateriais, definirListaMateriais] = useState(listaInicial)
+  let preco = ['1','2','3']
+  let [precoMateriais, definirprecoMateriais] = useState(preco)
+
   
+  
+
   return (
     <View style={styles.container}>
       <Text>APP-Lista material escolar</Text>
-      <FlatList
+      <View style={styles.item}>
+      <FlatList 
       data = {listaMateriais}
       renderItem={({item}) => <Text>{item}</Text>}
       />
-      <TextInput
+
+<FlatList 
+      data = { precoMateriais}
+      renderItem={({item}) => <Text>{item}</Text>}
+      />
+</View>
+
+<TextInput
       style={styles.input}
       placeholder={'Inserir Novo Item'}
       onSubmitEditing={({nativeEvent})=>
       definirListaMateriais(listaMateriais.concat(nativeEvent.text))
       }
 />
+
+<TextInput
+      style={styles.input}
+      placeholder={'Inserir Novo Preço'}
+      onSubmitEditing={({nativeEvent})=>
+     definirprecoMateriais(precoMateriais.concat(nativeEvent.text))
+      }
+/>
+
         
     </View>
   );
@@ -39,7 +61,25 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 20,
-    alignSelf: 'stretch'
-  }
+    alignSelf: 'stretch',
+    top:260
+  },
+
+  materiais: {
+    top: 200,
+   
+  },
+  item: {
+    flexDirection:'row',
+    alignItems: 'center',
+marginVertical:5
+   
+  },
+
+preco: {
+  Bottom: 10,
+
+}
+  
 });
 
