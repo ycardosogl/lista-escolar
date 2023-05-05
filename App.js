@@ -1,49 +1,57 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { FlatList, StyleSheet, Text, View, TextInput } from 'react-native';
 import { useState } from 'react';
-import { TextInput, FlatList, StyleSheet, Text, View } from 'react-native';
-
 
 export default function App() {
-  let listaInicial = ['lapis','caneta','caderno']
-  let [listaMateriais, definirListaMateriais] = useState(listaInicial)
-  let preco = ['1','2','3']
-  let [precoMateriais, definirprecoMateriais] = useState(preco)
+  const listaInicial = [{ nome: 'nome', preco: 'preco' }];
+  const [listaMateriais, definirListaMateriais] = useState(listaInicial);
+  
+  
 
-  
-  
+  const adicionarPreco = (preco) => {
+    const novoItem =[{ nome: nome, preco: preco }];
+    definirListaMateriais([...listaMateriais, novoItem]);
+  };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.item}>
+      <Text>{item.nome  !== '' ? ` ${item.nome}` : ''}</Text>
+      <Text>{item.preco !== '' ? `R$ ${item.preco}` : ''}</Text>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Text>APP-Lista material escolar</Text>
-      <View style={styles.item}>
-      <FlatList 
-      data = {listaMateriais}
-      renderItem={({item}) => <Text>{item}</Text>}
+      <Text>APP - Lista de Material Escolar</Text>
+      <FlatList
+        data={listaMateriais}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={2}
+      />
+      <TextInput
+        placeholder={'Inserir Novo Item'}
+        onSubmitEditing={({ nativeEvent }) => {
+          const ultimoItem = listaMateriais[listaMateriais.length - 1];
+          if (ultimoItem.preco !== '') {
+            definirListaMateriais(
+              listaMateriais.concat({ nome: nativeEvent.text, preco: '' })
+            );
+          }
+        }}
       />
 
-<FlatList 
-      data = { precoMateriais}
-      renderItem={({item}) => <Text>{item}</Text>}
+      <TextInput
+        placeholder={'Inserir Novo Preço'}
+        onSubmitEditing={({ nativeEvent }) => {
+          if (ultimoItem.nome !== '') {
+            adicionarPreco(nativeEvent.text);
+          }
+        }}
       />
-</View>
 
-<TextInput
-      style={styles.input}
-      placeholder={'Inserir Novo Item'}
-      onSubmitEditing={({nativeEvent})=>
-      definirListaMateriais(listaMateriais.concat(nativeEvent.text))
-      }
-/>
-
-<TextInput
-      style={styles.input}
-      placeholder={'Inserir Novo Preço'}
-      onSubmitEditing={({nativeEvent})=>
-     definirprecoMateriais(precoMateriais.concat(nativeEvent.text))
-      }
-/>
-
-        
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -51,35 +59,18 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#add8e6',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 20,
-    alignSelf: 'stretch',
-    top:260
-  },
-
-  materiais: {
-    top: 200,
-   
-  },
   item: {
-    flexDirection:'row',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-marginVertical:5
-   
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    width: '100%',
   },
-
-preco: {
-  Bottom: 10,
-
-}
-  
 });
-
